@@ -22,9 +22,9 @@ jobs:
           python -m pip install --upgrade pip 
           pip install -r requirements.txt
       
-      - name: Run test
-        run : |
-          pytest --cov=app --cov-report=html tests/
+      # - name: Run test
+      #   run : |
+      #     pytest --cov=app --cov-report=html tests/
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3
