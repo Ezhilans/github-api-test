@@ -33,11 +33,11 @@ jobs:
         run : |
           docker buildx build . -t flask-app:latest --load
           docker images
-
           
       - name: Create kind k8 cluster
         uses: helm/kind-action@v1
 
       - name: Load the docker image in kind
         run : |
+          kubectl get nodes
           kind load docker-image flask-app
