@@ -1,0 +1,41 @@
+name: cicd
+
+on:
+  push:
+    branches:[main]
+  pull_request:
+    branches:[main]
+  
+jobs:
+  cicd-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5 
+
+      - name: Install the dependencies 
+        run : |
+          python -m pip install --upgrade pip 
+          pip install -r requirements.txt
+      
+      - name: Run test
+        run : |
+          pytest --cov=app --cov-report=html tests/
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        run : |
+          docker build -t flask-app:latest
+
+      - name: Create kind k8 cluster
+        uses: helm/kind-action@v1
+
+      - name: Load the docker image in kind
+        run : |
+          kind load docker-image flask-app:latest
